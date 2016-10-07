@@ -1,15 +1,18 @@
 package name.msutherland;
 
 import com.codahale.metrics.*;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
  *
  * Copied from https://bob-carpenter.github.io/games/sudoku/java_sudoku.html
  * Using Sudoku as a way to test new type of code
+ *
+ * Change code to find all possible solutions not just the first.
  */
 public class Sudoku {
-
 
     static final MetricRegistry metrics = new MetricRegistry();
     static ConsoleReporter reporter;
@@ -24,15 +27,27 @@ public class Sudoku {
      */
     public static void main(String[] args) {
         startReport();
-        Timer.Context context = main.time();
-        int[][] matrix = parseProblem(args);
+        //int[][] matrix = parseProblem(args);
+        int[][] matrix = GRID_OF_68_SOLUTIONS;
         writeMatrix(matrix);
-        if (solve(0,0,matrix))    // solves in place
-            writeMatrix(matrix);
+        Solve solver = new StreamSolve();
+        for (int i = 0 ; i < 100 ; i ++)
+        {
+            Timer.Context context = main.time();
+            solver.solve(deepCopy(matrix));
+            context.stop();
+        }
+        List results = solver.solve(matrix);
+
+        reporter.report();
+        if (!results.isEmpty())    // solves in place
+            System.out.println("Solutions : "+results.size());
         else
             System.out.println("NONE");
-        context.stop();
-        reporter.report();
+    }
+
+    static int[][] deepCopy(int[][] matrix) {
+        return java.util.Arrays.stream(matrix).map(el -> el.clone()).toArray($ -> matrix.clone());
     }
 
     static void startReport() {
@@ -43,44 +58,9 @@ public class Sudoku {
         reporter.start(1, TimeUnit.SECONDS);
     }
 
-
-    static boolean solve(int i, int j, int[][] cells) {
-        if (i == 9) {
-            i = 0;
-            if (++j == 9)
-                return true;
-        }
-        if (cells[i][j] != 0)  // skip filled cells
-            return solve(i+1,j,cells);
-
-        for (int val = 1; val <= 9; ++val) {
-            if (legal(i,j,val,cells)) {
-                cells[i][j] = val;
-                if (solve(i+1,j,cells))
-                    return true;
-            }
-        }
-        cells[i][j] = 0; // reset on backtrack
-        return false;
-    }
-
     static boolean legal(int i, int j, int val, int[][] cells) {
-        for (int k = 0; k < 9; ++k)  // row
-            if (val == cells[k][j])
-                return false;
-
-        for (int k = 0; k < 9; ++k) // col
-            if (val == cells[i][k])
-                return false;
-
-        int boxRowOffset = (i / 3)*3;
-        int boxColOffset = (j / 3)*3;
-        for (int k = 0; k < 3; ++k) // box
-            for (int m = 0; m < 3; ++m)
-                if (val == cells[boxRowOffset+k][boxColOffset+m])
-                    return false;
-
-        return true; // no violations, so it's legal
+        LegalSudokuEntry legal = new LegalSudokuEntry(i, j, cells);
+        return legal.test(val);
     }
 
     static int[][] parseProblem(String[] args) {
@@ -93,6 +73,42 @@ public class Sudoku {
         }
         return problem;
     }
+
+    private static final int[][] GRID_OF_16320_SOLUTIONS ={
+            {0,0,0,2,3,8,5,6,9},
+            {0,0,0,1,6,9,3,4,7},
+            {0,0,0,4,5,7,1,2,8},
+            {4,7,1,0,0,0,6,9,5},
+            {5,8,2,0,0,0,4,7,3},
+            {6,9,3,0,0,0,2,8,1},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0}
+    };
+
+    private static final int[][] GRID_OF_68_SOLUTIONS ={
+            {0,0,0,2,3,8,5,6,9},
+            {0,0,0,1,6,9,3,4,7},
+            {0,0,0,4,5,7,1,2,8},
+            {4,7,1,0,0,0,6,9,5},
+            {5,8,2,0,0,0,4,7,3},
+            {6,9,3,0,0,0,2,8,1},
+            {7,1,4,8,2,3,9,5,6},
+            {0,0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0,0}
+    };
+
+    private static final int[][] LAST_MISSING_GRID ={
+            {1,4,7,2,3,8,5,6,9},
+            {2,5,8,1,6,9,3,4,7},
+            {3,6,9,4,5,7,1,2,8},
+            {4,7,1,3,8,2,6,9,5},
+            {5,8,2,6,9,1,4,7,3},
+            {6,9,3,5,7,4,2,8,1},
+            {7,1,4,8,2,3,9,5,6},
+            {8,2,5,9,1,6,7,3,4},
+            {9,3,6,7,4,5,8,1,0}
+    };
 
     static void writeMatrix(int[][] solution) {
         for (int i = 0; i < 9; ++i) {
