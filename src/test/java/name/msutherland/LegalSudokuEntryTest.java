@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 import org.junit.jupiter.api.Test;
 
 @RunWith(JUnitPlatform.class)
-public class SudokuTest {
+public class LegalSudokuEntryTest {
 
-    private static final int[][] EMPTY_GRID ={
+    private static final Integer[][] EMPTY_GRID ={
             {0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0},
@@ -23,15 +23,15 @@ public class SudokuTest {
 
     @Test
     public void testLegalMoveInEmptyGrid(){
-        assertEquals(true, Sudoku.legal(0,0,1,EMPTY_GRID));
+        assertEquals(true, new LegalSudokuEntry(0,0,EMPTY_GRID).test(1));
     }
 
     @Test
     public void testIllegalMoveInEmptyGrid(){
-        assertEquals(false, Sudoku.legal(0,0,0,EMPTY_GRID));
+        assertEquals(false, new LegalSudokuEntry(0,0,EMPTY_GRID).test(0));
     }
 
-    private static final int[][] SET_GRID ={
+    private static final Integer[][] SET_GRID ={
             {0,2,3,4,5,6,7,8,9},
             {0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0},
@@ -45,11 +45,11 @@ public class SudokuTest {
 
     @Test
     public void testLegalMoveInSetGrid(){
-        assertEquals(true, Sudoku.legal(0,0,1,SET_GRID));
+        assertEquals(true, new LegalSudokuEntry(0,0,SET_GRID).test(1));
     }
 
     @Test
     public void testIllegalMoveInSetGrid(){
-        assertEquals(false, Sudoku.legal(0,0,2,SET_GRID));
+        assertEquals(false, new LegalSudokuEntry(0,0,SET_GRID).test(2));
     }
 }
