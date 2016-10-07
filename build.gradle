@@ -1,0 +1,15 @@
+apply plugin: 'java'
+
+repositories {
+    maven {
+        url "http://archiva.local/repository/snapshots/"
+    }
+
+    maven {
+        url "http://archiva.local/repository/internal/"
+    }
+}
+
+dependencies {
+    compile group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+}
