@@ -5,9 +5,9 @@ import java.util.function.Predicate;
 public class LegalSudokuEntry implements Predicate<Integer> {
     private final int rowNumber;
     private final int columnNumber;
-    private final int[][] matrix;
+    private final Integer[][] matrix;
 
-    public LegalSudokuEntry(int rowNumber, int columnNumber, int[][] matrix) {
+    public LegalSudokuEntry(int rowNumber, int columnNumber, Integer[][] matrix) {
         this.rowNumber = rowNumber;
         this.columnNumber = columnNumber;
         this.matrix = matrix;

@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface Solve {
 
-    List<int[][]> solve(int[][] cells);
+    List<Integer[][]> solve(Integer[][] cells);
 }

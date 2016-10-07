@@ -7,11 +7,11 @@ import java.util.List;
 
 public class LoopSolve implements Solve{
 
-    public List<int[][]> solve(int[][] cells){
+    public List<Integer[][]> solve(Integer[][] cells){
         return solve(0,0,cells);
     }
 
-    private List<int[][]> solve(int i, int j, int[][] cells) {
+    private List<Integer[][]> solve(int i, int j, Integer[][] cells) {
         if (i == 9 && j == 8) {
             // All squares filled, valid grid
             return Collections.singletonList(cells);
@@ -25,10 +25,10 @@ public class LoopSolve implements Solve{
         }
 
         LegalSudokuEntry legal = new LegalSudokuEntry(i, j, cells);
-        List<int[][]> results = new ArrayList<>();
+        List<Integer[][]> results = new ArrayList<>();
         for (int val = 1; val <= 9; ++val) {
             if (legal.test(val)) {
-                int[][] cellsCopy = Sudoku.deepCopy(cells);
+                Integer[][] cellsCopy = Sudoku.deepCopy(cells);
                 cellsCopy[i][j] = val;
                 results.addAll(solve(i + 1, j, cellsCopy));
             }

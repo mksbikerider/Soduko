@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
-public class StreamSolve implements Solve, Function<int[][], List<int[][]> >{
+public class StreamSolve implements Solve, Function<Integer[][], List<Integer[][]> >{
 
-    private static final List<Integer> VALID_VALUES = Arrays.asList(1,2,3,4,5,6,7,8,9);
+    static final List<Integer> VALID_VALUES = Arrays.asList(1,2,3,4,5,6,7,8,9);
 
     private int i;
     private int j;
@@ -18,12 +19,12 @@ public class StreamSolve implements Solve, Function<int[][], List<int[][]> >{
         this(0,0);
     }
 
-    StreamSolve(int i, int j) {
+    private StreamSolve(int i, int j) {
         this.i = i;
         this.j = j;
     }
 
-    public List<int[][]> solve(int[][] cells){
+    public List<Integer[][]> solve(Integer[][] cells){
 
         if (i == 9 && j == 8){
             // All squares filled, valid grid
@@ -41,31 +42,39 @@ public class StreamSolve implements Solve, Function<int[][], List<int[][]> >{
         CreateMatrix createMatrix = new CreateMatrix(i,j,cells);
         StreamSolve solve = new StreamSolve(i+1, j);
 
-        return VALID_VALUES.parallelStream().unordered().filter(legal)
+        return streamValidValues().unordered().filter(legal)
                 .map(createMatrix)
-                .map(solve).flatMap(List::parallelStream).collect(Collectors.toList());
+                .map(solve).flatMap(mapper()).collect(Collectors.toList());
 
+    }
+
+    Stream<Integer> streamValidValues(){
+        return VALID_VALUES.stream();
+    }
+
+    Function<List<Integer[][]>, Stream<Integer[][]>> mapper(){
+        return List::stream;
     }
 
     @Override
-    public List<int[][]> apply(int[][] ints) {
-        return solve(ints);
+    public List<Integer[][]> apply(Integer[][] cells) {
+        return solve(cells);
     }
 
-    private class CreateMatrix implements Function<Integer, int[][]>{
+    private class CreateMatrix implements Function<Integer, Integer[][]>{
         private final int i;
         private final int j;
-        private final int[][] cells;
+        private final Integer[][] cells;
 
-        private CreateMatrix(int i, int j, int[][] cells) {
+        private CreateMatrix(int i, int j, Integer[][] cells) {
             this.i = i;
             this.j = j;
             this.cells = cells;
         }
 
         @Override
-        public int[][] apply(Integer val) {
-            int[][] cellsCopy = Sudoku.deepCopy(cells);
+        public Integer[][] apply(Integer val) {
+            Integer[][] cellsCopy = Sudoku.deepCopy(cells);
             cellsCopy[i][j] = val;
             return cellsCopy;
         }
