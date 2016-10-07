@@ -112,7 +112,7 @@ public class Sudoku {
 
     static final MetricRegistry metrics = new MetricRegistry();
     static ConsoleReporter reporter;
-    static final Timer responses = metrics.timer(MetricRegistry.name(Sudoku.class, "responses"));
+    static final Timer main = metrics.timer(MetricRegistry.name(Sudoku.class, "main"));
 
     /**
      * Print the specified Sudoku problem and its solution.  The
@@ -123,7 +123,7 @@ public class Sudoku {
      */
     public static void main(String[] args) {
         startReport();
-        Timer.Context context = responses.time();
+        Timer.Context context = main.time();
         int[][] matrix = parseProblem(args);
         writeMatrix(matrix);
         if (solve(0,0,matrix))    // solves in place
