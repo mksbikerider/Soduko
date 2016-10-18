@@ -7,6 +7,16 @@ import java.util.List;
 
 public class LoopSolve implements Solve{
 
+    private final int maxDepth;
+
+    public LoopSolve() {
+        this(0);
+    }
+
+    public LoopSolve(int maxDepth) {
+        this.maxDepth = maxDepth;
+    }
+
     public List<Integer[][]> solve(Integer[][] cells){
         return solve(0,0,cells);
     }
@@ -31,6 +41,9 @@ public class LoopSolve implements Solve{
                 Integer[][] cellsCopy = Sudoku.deepCopy(cells);
                 cellsCopy[i][j] = val;
                 results.addAll(solve(i + 1, j, cellsCopy));
+                if(results.size()>maxDepth){
+                    return results;
+                }
             }
         }
         return results;
