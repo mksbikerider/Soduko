@@ -1,0 +1,37 @@
+buildscript {
+    repositories {
+        maven {
+            url "http://archiva.local/repository/internal/"
+        }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.1.RELEASE")
+    }
+}
+
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+dependencies {
+    compile( group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2' )
+    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
+    compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.7'
+    compile("org.springframework.boot:spring-boot-starter-web:1.4.1.RELEASE"){
+        exclude group: 'ch.qos.logback'
+    }
+
+    runtime "javax.servlet:jstl:1.2"
+
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:1.4.1.RELEASE")
+    providedRuntime "org.apache.tomcat.embed:tomcat-embed-jasper:9.0.0.M11"
+
+
+    testCompile("org.junit.jupiter:junit-jupiter-api:5.0.0-M2")
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.0.0-M2")
+    testCompile("org.junit.platform:junit-platform-runner:1.0.0-M2")
+}
+
+springBoot {
+    mainClass = 'name.msutherland.config.SpringStart'
+}
