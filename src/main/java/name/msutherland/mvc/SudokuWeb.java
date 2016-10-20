@@ -41,7 +41,7 @@ public class SudokuWeb{
 
             }
         }
-        int size = new LoopSolve(maxDepth).solve(matrixInt).size();
+        int size = new LoopSolve(1000).solve(matrixInt).size();
 
         ModelAndView result = new ModelAndView("ResultView");
         result.addObject("size", size);

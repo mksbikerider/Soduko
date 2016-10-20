@@ -35,7 +35,7 @@ public class Sudoku {
 
         runSolver(matrix, new StreamSolve());
         runSolver(matrix, new ParallelSolve());
-        runSolver(matrix, new LoopSolve(maxDepth));
+        runSolver(matrix, new LoopSolve());
 
         System.out.println("Final Report");
         reporter.report();
