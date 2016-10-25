@@ -20,7 +20,7 @@ public class SudokuRest {
     @RequestMapping(path="/rest", method= RequestMethod.POST)
     public ModelMap solve(@Valid SudokuRestMatrix form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            ModelMap result = new ModelMap("RestView");
+            ModelMap result = new ModelMap();
             result.mergeAttributes(bindingResult.getModel());
             return result;
         }
@@ -40,7 +40,7 @@ public class SudokuRest {
         }
         int size = new LoopSolve(1000).solve(matrixInt).size();
 
-        ModelMap result = new ModelMap("ResultView");
+        ModelMap result = new ModelMap();
         result.addAttribute("size", size);
         return result;
     }

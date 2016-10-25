@@ -27,7 +27,7 @@
         <input type="text" ng-model="user.lastName">
         <br><br>
         <table>
-            <tr ng-repeat="row in matrix.rows track by $index">
+            <tr ng-repeat="row in matrix.rows track by $index" id="matrix_row_{{$index}}">
 
                 <td ng-repeat="cell in row.cells track by $index">
                  Cell = <input ng-model="cell"/>
