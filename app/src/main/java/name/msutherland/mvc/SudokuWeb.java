@@ -16,6 +16,7 @@ public class SudokuWeb{
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(new SudokuWebFormValidator());
     }
+
     @RequestMapping(path="/", method=RequestMethod.GET)
     public ModelAndView home() {
         ModelAndView result = new ModelAndView("HomeView");
