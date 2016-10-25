@@ -19,38 +19,50 @@
 <body>
 	<h1>Spring/AngularJS example</h1>
 
-	<div ng-app="myApp" ng-controller="formCtrl">
+	<p>Test 2</p>
+
+	<div ng-app="sudokuApp">
+	 <div ng-controller="matrixCtrl">
+      <form novalidate>
+        <table>
+            <tr ng-repeat="row in matrix.rows track by $index" id="matrix_row_{{$index}}">
+
+                <td ng-repeat="cell in row.cells track by $index">
+                    <input ng-model="cell"/>
+                </td>
+            </tr>
+        </table>
+
+        <button ng-click="submit()">GO</button>
+      </form>
+      <p>matrix =  {{matrix}}</p>
+      <p>statusText = {{statusText}}</p>
+    </div>
+
+    <div ng-controller="nameCtrl">
       <form novalidate>
         First Name:<br>
         <input type="text" ng-model="user.firstName"><br>
         Last Name:<br>
         <input type="text" ng-model="user.lastName">
-        <br><br>
-        <table>
-            <tr ng-repeat="row in matrix.rows track by $index" id="matrix_row_{{$index}}">
-
-                <td ng-repeat="cell in row.cells track by $index">
-                 Cell = <input ng-model="cell"/>
-                </td>
-            </tr>
-        </table>
-
-        <button ng-click="reset()">RESET</button>
       </form>
-      <p>matrix =  {{matrix}}</p>
-      <p>master = {{master}}</p>
+      <p>Line 1 =  {{user.firstName}}</p>
+      <p>Line 2 = {{user.lastName}}</p>
+
+        <button ng-click="reset()">reset</button>
+    </div>
     </div>
 
 
     <script>
-    var app = angular.module('myApp', []);
-    app.controller('formCtrl', function($scope, $http) {
+    var app = angular.module('sudokuApp', []);
+    app.controller('matrixCtrl', function($scope, $http) {
         $http.get("http://localhost:5000/rest")
             .then(function (response) {$scope.matrix = response.data;},
             function myError(response) {
-            $scope.master = response.statusText;
+            $scope.statusText = response.statusText;
         });
-        $scope.reset = function() {
+        $scope.submit = function() {
                var data = $.param({
                                form: $scope.matrix
                            });
@@ -64,8 +76,14 @@
                 $http.post("http://localhost:5000/rest", data, config)
                     .then(function (response) {$scope.matrix = response.data;},
                     function myError(response) {
-                    $scope.master = response.statusText;
+                    $scope.statusText = response.statusText;
                 });
+        };
+    });
+    app.controller('nameCtrl', function($scope) {
+        $scope.reset = function() {
+               $scope.user.firstName = '';
+               $scope.user.lastName = ''
         };
     });
     </script>
