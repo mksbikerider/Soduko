@@ -1,6 +1,5 @@
 package name.msutherland.mvc.rest;
 
-
 import name.msutherland.config.SpringStart;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
