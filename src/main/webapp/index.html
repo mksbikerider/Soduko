@@ -1,0 +1,76 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<style>
+.error {
+	color: #ff0000;
+}
+
+.errorblock {
+	color: #000;
+	background-color: #ffEEEE;
+	border: 3px solid #ff0000;
+	padding: 8px;
+	margin: 16px;
+}
+</style>
+</head>
+<body>
+	<h1>Spring/AngularJS example</h1>
+
+	<div ng-app="bookingApp">
+	 <div ng-controller="venuesCtrl">
+      <form novalidate>
+        <div>
+            <select name="selectVenue" id="selectVenue" ng-model="data.selectedVenue">
+                <option ng-repeat="venue in venues" value="{{venue.id}}">{{venue.name}}</option>
+            </select>
+
+
+            <button ng-click="submitVenue()">Choose Venue</button>
+        </div>
+        <div>
+          <select name="selectSection" id="selectSection" ng-model="data.selectedSection">
+              <option ng-repeat="section in sections" value="{{section.id}}">{{section.name}}</option>
+          </select>
+
+          <button ng-click="submitSection()">Choose Section</button>
+        </div>
+      </form>
+      <p>matrix =  {{venues}}</p>
+      <p>statusText = {{statusText}}</p>
+    </div>
+    </div>
+
+
+    <script>
+    var app = angular.module('bookingApp', []);
+    app.controller('venuesCtrl', function($scope, $http) {
+        $http.get("http://localhost:5000/venues")
+            .then(function (response) {$scope.venues = response.data;},
+            function myError(response) {
+            $scope.statusText = response.statusText;
+        });
+        $scope.submitVenue = function() {
+               var data = $.param({
+                               form: $scope.selectedVenue
+                           });
+
+                var config = {
+                    headers : {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;'
+                    }
+                }
+
+                $http.get("http://localhost:5000/sections", data, config)
+                    .then(function (response) {$scope.sections = response.data;},
+                    function myError(response) {
+                    $scope.statusText = response.statusText;
+                });
+        };
+    });
+    </script>
+
+</body>
+</html>

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 @RunWith(JUnitPlatform.class)
 public class LegalSudokuEntryTest {
-
+/*
     private static final Integer[][] EMPTY_GRID ={
             {0,0,0,0,0,0,0,0,0},
             {0,0,0,0,0,0,0,0,0},
@@ -52,4 +52,5 @@ public class LegalSudokuEntryTest {
     public void testIllegalMoveInSetGrid(){
         assertEquals(false, new LegalSudokuEntry(0,0,SET_GRID).test(2));
     }
+    */
 }

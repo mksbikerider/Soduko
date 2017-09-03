@@ -7,8 +7,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.SystemClock;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootTest(classes = {SpringStart.class}, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 //@RunWith(JUnitPlatform.class)
 //@ExtendWith(SpringExtension::class)
-public class SudokuRestIntegrationTest {
+public class RestIntegrationTest {
 
     private static WebDriver driver;
     @Autowired
@@ -42,16 +45,17 @@ public class SudokuRestIntegrationTest {
     @Test
     public void loadPage() throws InterruptedException {
         applicationContext.isRunning();
-        driver.get("http://localhost:5000/jsp/RestView.jsp");
-
-        /*
-        WebElement element = driver.findElement(By.xpath("/html"));
-        String body = element.getAttribute("innerHTML");
-        */
+        driver.get("http://localhost:5000/");
 
         (new WebDriverWait(driver, 10)).until(new ExpectedCondition<Boolean>() {
             public Boolean apply(WebDriver d) {
-                return d.findElement(By.id("matrix_row_0")).getAttribute("ng-repeat").toLowerCase().startsWith("row");
+                Select dropdown = new Select(driver.findElement(By.id("selectVenue")));
+                for(WebElement element:  dropdown.getOptions()){
+                    if (element.getText().contains("Brixton")){
+                        return true;
+                    }
+                }
+                return false;
             }
         });
 
