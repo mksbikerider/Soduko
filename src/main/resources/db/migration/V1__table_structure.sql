@@ -1,0 +1,41 @@
+CREATE TABLE venues (
+    ID int NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE sections (
+    ID int NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    VENUE_ID int NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (VENUE_ID) REFERENCES Venues(ID)
+);
+
+CREATE TABLE section_rows (
+    ID int NOT NULL,
+    SECTION_ID int NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (SECTION_ID) REFERENCES sections(ID)
+);
+
+CREATE TABLE seat (
+    ID int NOT NULL,
+    SECTION_ROW_ID int NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (SECTION_ROW_ID) REFERENCES section_rows(ID)
+);
+
+CREATE TABLE reservation (
+    ID int NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    PRIMARY KEY (ID)
+);
+
+CREATE TABLE reservation_to_seat (
+    RESERVATION_ID int NOT NULL,
+    SEAT_ID int NOT NULL,
+    FOREIGN KEY (RESERVATION_ID) REFERENCES reservation(ID),
+    FOREIGN KEY (SEAT_ID) REFERENCES seat(ID),
+    CONSTRAINT UC_reservation_to_seat UNIQUE (RESERVATION_ID,SEAT_ID)
+)
