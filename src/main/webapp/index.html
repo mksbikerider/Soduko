@@ -54,7 +54,7 @@
         });
         $scope.submitVenue = function() {
                var data = $.param({
-                               form: $scope.selectedVenue
+                               selectedVenue: $scope.data.selectedVenue
                            });
 
                 var config = {
@@ -63,7 +63,7 @@
                     }
                 }
 
-                $http.get("http://localhost:5000/sections", data, config)
+                $http.get("http://localhost:5000/sections?selectedVenue="+$scope.data.selectedVenue, data, config)
                     .then(function (response) {$scope.sections = response.data;},
                     function myError(response) {
                     $scope.statusText = response.statusText;
